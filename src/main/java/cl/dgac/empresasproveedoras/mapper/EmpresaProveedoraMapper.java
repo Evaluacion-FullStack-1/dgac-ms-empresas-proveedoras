@@ -18,7 +18,6 @@ public class EmpresaProveedoraMapper {
         empresa.setDireccion(dto.getDireccion());
         empresa.setRubro(dto.getRubro());
         empresa.setEstado(dto.getEstado());
-        empresa.setFechaRegistro(dto.getFechaRegistro());
 
         return empresa;
     }
@@ -47,6 +46,5 @@ public class EmpresaProveedoraMapper {
         empresa.setDireccion(dto.getDireccion());
         empresa.setRubro(dto.getRubro());
         empresa.setEstado(dto.getEstado());
-        empresa.setFechaRegistro(dto.getFechaRegistro());
     }
 }
