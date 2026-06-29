@@ -17,14 +17,16 @@ public class EmpresaProveedoraService {
 
     private final EmpresaProveedoraRepository empresaRepository;
     private final EmpresaProveedoraMapper empresaMapper;
-    private final WebClient.Builder webClientBuilder;
+    
+    // Inyectamos el WebClient configurado dinámicamente para Eureka
+    private final WebClient webClientSeguros;
 
     public EmpresaProveedoraService(EmpresaProveedoraRepository empresaRepository,
                                     EmpresaProveedoraMapper empresaMapper,
-                                    WebClient.Builder webClientBuilder) {
+                                    WebClient webClientSeguros) {
         this.empresaRepository = empresaRepository;
         this.empresaMapper = empresaMapper;
-        this.webClientBuilder = webClientBuilder;
+        this.webClientSeguros = webClientSeguros;
     }
 
     public List<EmpresaProveedoraResponseDTO> listarEmpresas() {
@@ -97,9 +99,10 @@ public class EmpresaProveedoraService {
     }
 
     public String consultarMicroservicioSeguros() {
-        return webClientBuilder.build()
+        // Utilizamos el WebClient con la ruta relativa, sin localhost
+        return webClientSeguros
                 .get()
-                .uri("http://localhost:8084/api/seguros")
+                .uri("/api/seguros")
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

@@ -4,6 +4,8 @@ import cl.dgac.empresasproveedoras.dto.EmpresaProveedoraRequestDTO;
 import cl.dgac.empresasproveedoras.dto.EmpresaProveedoraResponseDTO;
 import cl.dgac.empresasproveedoras.service.EmpresaProveedoraService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,7 +44,22 @@ public class EmpresaProveedoraController {
         return ResponseEntity.ok(empresaService.buscarPorId(id));
     }
 
-    @Operation(summary = "Registrar nueva empresa proveedora", description = "Ingresa una nueva entidad operadora de drones a la base de datos de la DGAC.")
+    @Operation(
+            summary = "Registrar nueva empresa proveedora", 
+            description = "Ingresa una nueva entidad operadora de drones a la base de datos de la DGAC.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Estructura de datos para registrar una nueva empresa proveedora",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Ejemplo de Registro de Empresa",
+                                    summary = "JSON de prueba para empresa de inspección",
+                                    value = "{\n  \"rut\": \"76.543.210-K\",\n  \"razonSocial\": \"AeroInspecciones SpA\",\n  \"rubro\": \"INSPECCION_INDUSTRIAL\",\n  \"direccion\": \"Av. Providencia 1234, Santiago\",\n  \"telefono\": \"+56987654321\",\n  \"email\": \"contacto@aeroinspecciones.cl\",\n  \"estado\": \"ACTIVA\"\n}"
+                            )
+                    )
+            )
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Empresa registrada exitosamente"),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos (ej. RUT duplicado)")
@@ -55,7 +72,22 @@ public class EmpresaProveedoraController {
         return ResponseEntity.status(HttpStatus.CREATED).body(empresaCreada);
     }
 
-    @Operation(summary = "Actualizar información de la empresa", description = "Modifica los datos comerciales, de contacto o el estado de una empresa proveedora existente.")
+    @Operation(
+            summary = "Actualizar información de la empresa", 
+            description = "Modifica los datos comerciales, de contacto o el estado de una empresa proveedora existente.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Estructura de datos para actualizar la empresa",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Ejemplo de Actualización de Empresa",
+                                    summary = "JSON de prueba para cambio de estado o datos",
+                                    value = "{\n  \"rut\": \"76.543.210-K\",\n  \"razonSocial\": \"AeroInspecciones SpA\",\n  \"rubro\": \"INSPECCION_INDUSTRIAL\",\n  \"direccion\": \"Av. Providencia 1234, Oficina 501, Santiago\",\n  \"telefono\": \"+56911223344\",\n  \"email\": \"gerencia@aeroinspecciones.cl\",\n  \"estado\": \"SUSPENDIDA\"\n}"
+                            )
+                    )
+            )
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Empresa actualizada exitosamente"),
             @ApiResponse(responseCode = "404", description = "Empresa no encontrada"),
