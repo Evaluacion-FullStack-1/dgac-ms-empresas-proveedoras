@@ -151,7 +151,7 @@ public class EmpresaProveedoraController {
         return ResponseEntity.ok(empresaService.buscarPorRazonSocial(razonSocial));
     }
 
-    @Operation(summary = "Consultar estado del servicio de Seguros (WebClient)", description = "Endpoint de integración para verificar la disponibilidad del microservicio de Seguros (validación de pólizas de drones).")
+    @Operation(summary = "Consultar estado del servicio de Seguros", description = "Endpoint de integración para verificar la disponibilidad del microservicio de Seguros (validación de pólizas de drones).")
     @ApiResponse(responseCode = "200", description = "Comunicación exitosa con el microservicio de Seguros")
     @GetMapping("/seguros")
     public ResponseEntity<String> consultarSeguros() {

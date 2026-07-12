@@ -6,8 +6,9 @@ import cl.dgac.empresasproveedoras.exception.ResourceNotFoundException;
 import cl.dgac.empresasproveedoras.mapper.EmpresaProveedoraMapper;
 import cl.dgac.empresasproveedoras.model.EmpresaProveedora;
 import cl.dgac.empresasproveedoras.repository.EmpresaProveedoraRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,15 +19,19 @@ public class EmpresaProveedoraService {
     private final EmpresaProveedoraRepository empresaRepository;
     private final EmpresaProveedoraMapper empresaMapper;
     
-    // Inyectamos el WebClient configurado dinámicamente para Eureka
-    private final WebClient webClientSeguros;
+    // Inyectamos RestTemplate en lugar de WebClient
+    private final RestTemplate restTemplate;
+
+    // Leemos la URL base desde el application.yml
+    @Value("${seguros.base-url}")
+    private String segurosBaseUrl;
 
     public EmpresaProveedoraService(EmpresaProveedoraRepository empresaRepository,
                                     EmpresaProveedoraMapper empresaMapper,
-                                    WebClient webClientSeguros) {
+                                    RestTemplate restTemplate) {
         this.empresaRepository = empresaRepository;
         this.empresaMapper = empresaMapper;
-        this.webClientSeguros = webClientSeguros;
+        this.restTemplate = restTemplate;
     }
 
     public List<EmpresaProveedoraResponseDTO> listarEmpresas() {
@@ -98,13 +103,12 @@ public class EmpresaProveedoraService {
                 .collect(Collectors.toList());
     }
 
+    // --- MÉTODO CORREGIDO ---
     public String consultarMicroservicioSeguros() {
-        // Utilizamos el WebClient con la ruta relativa, sin localhost
-        return webClientSeguros
-                .get()
-                .uri("/api/seguros")
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        // Construimos la URL completa para llamar al otro servicio vía Eureka
+        String urlFinal = segurosBaseUrl + "/api/seguros";
+        
+        // Hacemos la petición GET de forma síncrona
+        return restTemplate.getForObject(urlFinal, String.class);
     }
 }
